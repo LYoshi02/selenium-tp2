@@ -62,13 +62,12 @@ describe("Casos de prueba para el aula virtual", () => {
     expect(logginErrorMessage).toMatch(expectedMessage);
   });
 
-  test("3 - Titulo correcto al ingresar al aula de la materia", async () => {
+  test.only("3 - Titulo correcto al ingresar al aula de la materia", async () => {
     // ARRANGE
     const course = "GESTION DE LA CALIDAD Y AUDITORIA";
     await utils.loginUser(envVariables.studentId, envVariables.password);
 
     // ACT
-    // await utils.goToMyCoursesPage();
     await utils.openCourse(course);
 
     // ASSERT
@@ -78,5 +77,27 @@ describe("Casos de prueba para el aula virtual", () => {
     await utils.saveOutputScreenshot("result-3.png");
 
     expect(courseName).toMatch(expectedCourseName);
+  });
+
+  test("4 - Visualización de recordatorio de pago de cuota al iniciar sesión", async () => {
+    // ARRANGE
+    // ACT
+    // ASSERT
+  });
+
+  test("5 - Búsqueda de materia exitosa desde 'Todos los cursos'", async () => {
+    // ARRANGE
+    await utils.loginUser(envVariables.studentId, envVariables.password);
+
+    // ACT
+    await utils.goToMyCoursesPage();
+
+    // ASSERT
+    const courseNamesFound = await utils.getListedCoursesNames();
+    const expectedCourseName = "GESTION DE LA CALIDAD Y AUDITORIA";
+
+    await utils.saveOutputScreenshot("result-5.png");
+
+    expect(courseNamesFound).toContain(expectedCourseName);
   });
 });

@@ -77,11 +77,7 @@ export class TestUtils {
   }
 
   public async openCourse(course: string) {
-    const courseElement = await this.driver.wait(
-      until.elementLocated(By.linkText(course)),
-      DEFAULT_DISPLAY_TIMEOUT,
-    );
-
+    const courseElement = await this.findCourseByName(course);
     await this.scrollElementIntoView(courseElement);
     await this.clickElement(courseElement);
   }
@@ -103,6 +99,28 @@ export class TestUtils {
     return await this.driver
       .wait(until.elementLocated(By.css("p.aula")), DEFAULT_DISPLAY_TIMEOUT)
       .getText();
+  }
+
+  private async findCourseByName(course: string) {
+    const courseElement = await this.driver.wait(
+      until.elementLocated(By.linkText(course)),
+      DEFAULT_DISPLAY_TIMEOUT,
+    );
+    return courseElement;
+  }
+
+  public async getListedCoursesNames() {
+    const courseElements = await this.driver.wait(
+      until.elementsLocated(By.css("h2.title a")),
+      DEFAULT_DISPLAY_TIMEOUT,
+    );
+    const courseNames: string[] = [];
+    for (const courseElement of courseElements) {
+      const courseName = await courseElement.getText();
+      courseNames.push(courseName);
+    }
+
+    return courseNames;
   }
 
   public async saveOutputScreenshot(screenshotName: string) {
