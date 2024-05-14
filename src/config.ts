@@ -4,5 +4,6 @@ import dotenv from "dotenv";
 dotenv.config();
 
 export const envVariables = {
-  // exampleVariable: process.env.EXAMPLE_VARIABLE || "",
+  studentId: process.env.STUDENT_ID || "",
+  password: process.env.PASSWORD || "",
 };
