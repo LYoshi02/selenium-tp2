@@ -164,6 +164,24 @@ export class TestUtils {
     return await loginHeadingElement.isDisplayed();
   }
 
+  public async openProfile() {
+    const profileButtonElement = await this.driver.wait(
+      until.elementLocated(
+        By.xpath("//a[contains(@href, 'user/profile.php')]"),
+      ),
+      DEFAULT_DISPLAY_TIMEOUT,
+    );
+    await this.clickElement(profileButtonElement);
+  }
+
+  public async getCoursesListedInProfile() {
+    const courseElements = await this.driver.wait(
+      until.elementsLocated(By.css("dl dd a")),
+    );
+    const courseNames = await this.getElementsText(courseElements);
+    return courseNames;
+  }
+
   public async saveOutputScreenshot(screenshotName: string) {
     const screenshot = await this.driver.takeScreenshot();
     const screenshotPath = path.join(__dirname, "..", "..", "output");

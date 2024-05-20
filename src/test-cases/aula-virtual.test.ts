@@ -116,6 +116,22 @@ describe("Casos de prueba para el aula virtual", () => {
     expect(activityNamesFound).toContain(expectedActivityName);
   });
 
+  test("9 - Verificación de materia en listado de “Perfiles de curso” desde perfil del usuario.", async () => {
+    // ARRANGE
+    await utils.loginUser(envVariables.studentId, envVariables.password);
+
+    // ACT
+    await utils.openProfile();
+
+    // ASSERT
+    const coursesFound = await utils.getCoursesListedInProfile();
+    const expectedCourseName = "GESTION DE LA CALIDAD Y AUDITORIA";
+
+    await utils.saveOutputScreenshot("result-9.png");
+
+    expect(coursesFound).toContain(expectedCourseName);
+  });
+
   test("10 - Verificación de cierre de sesión exitoso", async () => {
     // ARRANGE
     await utils.loginUser(envVariables.studentId, envVariables.password);
