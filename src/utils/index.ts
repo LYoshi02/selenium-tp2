@@ -182,6 +182,32 @@ export class TestUtils {
     return courseNames;
   }
 
+  public async goToFAQPage() {
+    const faqButtonElement = await this.driver.wait(
+      until.elementLocated(
+        By.xpath("//a[contains(text(), 'PREGUNTAS FRECUENTES')]"),
+      ),
+    );
+    await this.clickElement(faqButtonElement);
+  }
+
+  public async toggleQuestionAccordion(question: string) {
+    const questionAccordionElement = await this.driver.wait(
+      until.elementLocated(
+        By.xpath(`//button[contains(text(), '${question}')]`),
+      ),
+    );
+    await this.clickElement(questionAccordionElement);
+  }
+
+  public async isAnswerDisplayed(answer: string) {
+    const answerElement = await this.driver.wait(
+      until.elementLocated(By.xpath(`//p[contains(text(), '${answer}')]`)),
+    );
+    await this.scrollElementIntoView(answerElement);
+    return await answerElement.isDisplayed();
+  }
+
   public async saveOutputScreenshot(screenshotName: string) {
     const screenshot = await this.driver.takeScreenshot();
     const screenshotPath = path.join(__dirname, "..", "..", "output");

@@ -116,6 +116,25 @@ describe("Casos de prueba para el aula virtual", () => {
     expect(activityNamesFound).toContain(expectedActivityName);
   });
 
+  test("8 - Verificación de preguntas frecuentes.", async () => {
+    // ARRANGE
+    const question = "¿Todos tenemos USUARIO?";
+    await utils.loginUser(envVariables.studentId, envVariables.password);
+
+    // ACT
+    await utils.goToFAQPage();
+    await utils.toggleQuestionAccordion(question);
+
+    // ASSERT
+    const expectedAnswer =
+      "No, solo aquellos alumnos que Secretaria Acádemica valide que estén en regla con la Universidad.";
+    const isAnswerDisplayed = await utils.isAnswerDisplayed(expectedAnswer);
+
+    await utils.saveOutputScreenshot("result-8.png");
+
+    expect(isAnswerDisplayed).toBe(true);
+  });
+
   test("9 - Verificación de materia en listado de “Perfiles de curso” desde perfil del usuario.", async () => {
     // ARRANGE
     await utils.loginUser(envVariables.studentId, envVariables.password);
