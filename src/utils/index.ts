@@ -114,13 +114,28 @@ export class TestUtils {
       until.elementsLocated(By.css("h2.title a")),
       DEFAULT_DISPLAY_TIMEOUT,
     );
-    const courseNames: string[] = [];
-    for (const courseElement of courseElements) {
-      const courseName = await courseElement.getText();
-      courseNames.push(courseName);
-    }
-
+    const courseNames = await this.getElementsText(courseElements);
     return courseNames;
+  }
+
+  public async getListedActivityNames() {
+    const activityElements = await this.driver.wait(
+      until.elementsLocated(
+        By.xpath("//a[img[@alt='Tarea'] and span[@class='instancename']]"),
+      ),
+      DEFAULT_DISPLAY_TIMEOUT,
+    );
+    const activityNames = await this.getElementsText(activityElements);
+    return activityNames;
+  }
+
+  private async getElementsText(elements: WebElement[]) {
+    const elementsText: string[] = [];
+    for (const element of elements) {
+      const elementText = await element.getText();
+      elementsText.push(elementText);
+    }
+    return elementsText;
   }
 
   public async logoutUser() {

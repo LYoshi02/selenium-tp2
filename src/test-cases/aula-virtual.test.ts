@@ -101,6 +101,21 @@ describe("Casos de prueba para el aula virtual", () => {
     expect(courseNamesFound).toContain(expectedCourseName);
   });
 
+  test("6 - Visualización correcta del icono de tarea.", async () => {
+    // ARRANGE
+    const course = "GESTION DE LA CALIDAD Y AUDITORIA";
+    await utils.loginUser(envVariables.studentId, envVariables.password);
+
+    // ACT
+    await utils.openCourse(course);
+
+    // ASSERT
+    const activityNamesFound = await utils.getListedActivityNames();
+    const expectedActivityName = "Gestor de Incidencias y Defectos";
+
+    expect(activityNamesFound).toContain(expectedActivityName);
+  });
+
   test("10 - Verificación de cierre de sesión exitoso", async () => {
     // ARRANGE
     await utils.loginUser(envVariables.studentId, envVariables.password);
