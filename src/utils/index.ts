@@ -123,6 +123,32 @@ export class TestUtils {
     return courseNames;
   }
 
+  public async logoutUser() {
+    const logoutButtonElement = await this.driver.wait(
+      until.elementLocated(By.xpath("//a[contains(@href, 'logout')]")),
+      DEFAULT_DISPLAY_TIMEOUT,
+    );
+    await this.clickElement(logoutButtonElement);
+
+    const confirmDisconnectionButton = await this.driver.findElement(
+      By.css('input[type="submit"][value="Continuar"]'),
+    );
+    await this.clickElement(confirmDisconnectionButton);
+  }
+
+  public async isLoginHeadingDisplayed() {
+    const loginHeadingElement = await this.driver.wait(
+      until.elementLocated(
+        By.xpath(
+          "//header[contains(text(), 'Iniciar sesión en el CAMPUS VIRTUAL')]",
+        ),
+      ),
+      DEFAULT_DISPLAY_TIMEOUT,
+    );
+
+    return await loginHeadingElement.isDisplayed();
+  }
+
   public async saveOutputScreenshot(screenshotName: string) {
     const screenshot = await this.driver.takeScreenshot();
     const screenshotPath = path.join(__dirname, "..", "..", "output");

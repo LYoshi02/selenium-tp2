@@ -62,7 +62,7 @@ describe("Casos de prueba para el aula virtual", () => {
     expect(logginErrorMessage).toMatch(expectedMessage);
   });
 
-  test.only("3 - Titulo correcto al ingresar al aula de la materia", async () => {
+  test("3 - Titulo correcto al ingresar al aula de la materia", async () => {
     // ARRANGE
     const course = "GESTION DE LA CALIDAD Y AUDITORIA";
     await utils.loginUser(envVariables.studentId, envVariables.password);
@@ -99,5 +99,17 @@ describe("Casos de prueba para el aula virtual", () => {
     await utils.saveOutputScreenshot("result-5.png");
 
     expect(courseNamesFound).toContain(expectedCourseName);
+  });
+
+  test("10 - Verificación de cierre de sesión exitoso", async () => {
+    // ARRANGE
+    await utils.loginUser(envVariables.studentId, envVariables.password);
+
+    // ACT
+    await utils.logoutUser();
+
+    // ASSERT
+    await utils.saveOutputScreenshot("result-10.png");
+    expect(await utils.isLoginHeadingDisplayed()).toBe(true);
   });
 });
