@@ -208,6 +208,15 @@ export class TestUtils {
     return await answerElement.isDisplayed();
   }
 
+  public async isPaymentMessageDisplayed() {
+    const message = "no deberá registrar deuda luego del día 10 de cada mes.";
+    const messageElement = await this.driver.wait(
+      until.elementLocated(By.xpath(`//em[contains(text(), '${message}')]`)),
+    );
+    await this.scrollElementIntoView(messageElement);
+    return await messageElement.isDisplayed();
+  }
+
   public async saveOutputScreenshot(screenshotName: string) {
     const screenshot = await this.driver.takeScreenshot();
     const screenshotPath = path.join(__dirname, "..", "..", "output");

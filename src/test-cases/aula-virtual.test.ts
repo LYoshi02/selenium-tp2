@@ -10,7 +10,7 @@ describe("Casos de prueba para el aula virtual", () => {
 
   beforeEach(async () => {
     const driver = await initializeWebDriver();
-    driver.manage().window().maximize();
+    await driver.manage().window().maximize();
     utils = new TestUtils(driver);
   });
 
@@ -80,9 +80,10 @@ describe("Casos de prueba para el aula virtual", () => {
   });
 
   test("4 - Visualización de recordatorio de pago de cuota al iniciar sesión", async () => {
-    // ARRANGE
-    // ACT
-    // ASSERT
+    await utils.loginUser(envVariables.studentId, envVariables.password);
+    const result = await utils.isPaymentMessageDisplayed();
+    await utils.saveOutputScreenshot("result-4.png");
+    expect(result).toBe(true);
   });
 
   test("5 - Búsqueda de materia exitosa desde 'Todos los cursos'", async () => {
@@ -101,7 +102,7 @@ describe("Casos de prueba para el aula virtual", () => {
     expect(courseNamesFound).toContain(expectedCourseName);
   });
 
-  test("6 - Visualización correcta del icono de tarea.", async () => {
+  test("6 - Visualización correcta del icono de tarea", async () => {
     // ARRANGE
     const course = "GESTION DE LA CALIDAD Y AUDITORIA";
     await utils.loginUser(envVariables.studentId, envVariables.password);
@@ -116,7 +117,13 @@ describe("Casos de prueba para el aula virtual", () => {
     expect(activityNamesFound).toContain(expectedActivityName);
   });
 
-  test("8 - Verificación de preguntas frecuentes.", async () => {
+  test("7 - Descarga exitosa de pdf", async () => {
+    // ARRANGE
+    // ACT
+    // ASSERT
+  });
+
+  test("8 - Verificación de preguntas frecuentes", async () => {
     // ARRANGE
     const question = "¿Todos tenemos USUARIO?";
     await utils.loginUser(envVariables.studentId, envVariables.password);
@@ -135,7 +142,7 @@ describe("Casos de prueba para el aula virtual", () => {
     expect(isAnswerDisplayed).toBe(true);
   });
 
-  test("9 - Verificación de materia en listado de “Perfiles de curso” desde perfil del usuario.", async () => {
+  test("9 - Verificación de materia en listado de “Perfiles de curso” desde perfil del usuario", async () => {
     // ARRANGE
     await utils.loginUser(envVariables.studentId, envVariables.password);
 
