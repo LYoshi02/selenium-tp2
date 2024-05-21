@@ -119,8 +119,21 @@ describe("Casos de prueba para el aula virtual", () => {
 
   test("7 - Descarga exitosa de pdf", async () => {
     // ARRANGE
+    const course = "GESTION DE LA CALIDAD Y AUDITORIA";
+    const courseResourceName =
+      "Introducción a la Calidad y Pruebas de Software";
+    const downloadedFileName = "Clase 1.pdf";
+    await utils.loginUser(envVariables.studentId, envVariables.password);
+
     // ACT
+    await utils.openCourse(course);
+    await utils.openCourseResource(courseResourceName);
+    await utils.downloadPdf(downloadedFileName);
+
     // ASSERT
+    const result = await utils.isFileDownloaded(downloadedFileName);
+    await utils.saveOutputScreenshot("result-7.png");
+    expect(result).toBe(true);
   });
 
   test("8 - Verificación de preguntas frecuentes", async () => {

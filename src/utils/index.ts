@@ -6,6 +6,7 @@ import {
   WebElement,
   until,
 } from "selenium-webdriver";
+import * as chrome from "selenium-webdriver/chrome";
 import path from "path";
 import fs from "fs";
 
@@ -13,6 +14,7 @@ const DEFAULT_DISPLAY_TIMEOUT = 10000;
 const AULA_VIRTUAL_URL = "https://campusvirtual.ugd.edu.ar/moodle/login/";
 const STUDENT_ID_INPUT_NAME = "username";
 const PASSWORD_INPUT_NAME = "password";
+const FILE_DOWNLOAD_DIR = path.resolve(__dirname, "..", "..", "downloads");
 
 export class TestUtils {
   private driver: WebDriver;
@@ -217,6 +219,49 @@ export class TestUtils {
     return await messageElement.isDisplayed();
   }
 
+  public async openCourseResource(resourceName: string) {
+    const resourceElement = await this.driver.wait(
+      until.elementLocated(
+        By.xpath(`//a[img and span[contains(text(), '${resourceName}')]]`),
+      ),
+      DEFAULT_DISPLAY_TIMEOUT,
+    );
+    await this.clickElement(resourceElement);
+  }
+
+  public async downloadPdf(fileName: string) {
+    const fileUrl = await this.driver
+      .wait(
+        until.elementLocated(By.xpath(`//a[contains(text(), '${fileName}')]`)),
+      )
+      .getAttribute("href");
+    await this.driver.get(fileUrl);
+  }
+
+  public async isFileDownloaded(fileName: string) {
+    const filePath = path.join(FILE_DOWNLOAD_DIR, fileName);
+    const fileExists = await this.waitForFile(filePath, 60000);
+    return fileExists;
+  }
+
+  private waitForFile(path: string, timeout: number): Promise<boolean> {
+    return new Promise((resolve) => {
+      const intervalId = setInterval(() => {
+        const fileExists = fs.existsSync(path);
+        if (fileExists) {
+          clearInterval(intervalId);
+          clearTimeout(timeoutId);
+          resolve(true);
+        }
+      }, 1000);
+
+      const timeoutId = setTimeout(() => {
+        clearInterval(intervalId);
+        resolve(false);
+      }, timeout);
+    });
+  }
+
   public async saveOutputScreenshot(screenshotName: string) {
     const screenshot = await this.driver.takeScreenshot();
     const screenshotPath = path.join(__dirname, "..", "..", "output");
@@ -236,7 +281,18 @@ export class TestUtils {
 }
 
 export async function initializeWebDriver(browser: string = Browser.CHROME) {
-  return await new Builder().forBrowser(browser).build();
+  const options = new chrome.Options();
+  options.setUserPreferences({
+    "download.default_directory": FILE_DOWNLOAD_DIR,
+    "download.prompt_for_download": false,
+    "download.directory_upgrade": true,
+    "plugins.always_open_pdf_externally": true,
+  });
+
+  return await new Builder()
+    .forBrowser(browser)
+    .setChromeOptions(options)
+    .build();
 }
 
 export async function terminateWebDriver(driver: WebDriver) {
