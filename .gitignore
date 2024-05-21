@@ -1,3 +1,5 @@
 /node_modules
 /output/*.png
+/downloads/*
+!/downloads/.gitkeep
 .env
