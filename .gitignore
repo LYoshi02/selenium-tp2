@@ -1,5 +1,6 @@
 /node_modules
 /output/*.png
+/output/test-report.html
 /downloads/*
 !/downloads/.gitkeep
 .env
